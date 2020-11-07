@@ -82,12 +82,18 @@ body {
   font-family: "Lato", sans-serif;
   font-size: 32px;
   font-weight: normal;
-  color: #000; }
+  color: #000;
+  }
 
 ::selection {
   color: #fff;
   background: rgba(0, 0, 0, 0.99);
   text-shadow: none; }
+
+.reveal .slides {
+    text-align: left;
+
+}
 
 .reveal .slides > section,
 .reveal .slides > section > section {
@@ -119,7 +125,7 @@ body {
   letter-spacing: normal;
   text-transform: none;
   text-shadow: none;
-  text-align: center;
+  text-align: left;
   word-wrap: break-word; }
 
 .reveal h1 {
