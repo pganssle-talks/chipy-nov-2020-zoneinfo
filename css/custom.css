@@ -108,6 +108,40 @@ body {
   min-height: 100% !important;
 }
 
+
+/*********************************************
+ * Title slide
+ *********************************************/
+
+.reveal .slides > section.title-slide {
+    display: flex !important;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    justify-content: space-around;
+    text-align: center;
+}
+
+.reveal .slides> section.title-slide > h1 {
+    font-size: 3em;
+    text-align: center;
+}
+
+.reveal .slides > section.title-slide > div.authors {
+    font-size: 2.5em;
+}
+
+.reveal .slides > section.title-slide > div.author-logos {
+}
+
+.reveal .slides > section.title-slide > div.talk-links {
+    font-size: 1em;
+}
+
+.reveal .slides > section.title-slide > div.license {
+    text-align: center;
+}
+
 /*********************************************
  * HEADERS
  *********************************************/
