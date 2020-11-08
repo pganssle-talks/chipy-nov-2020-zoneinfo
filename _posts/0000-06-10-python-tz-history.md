@@ -111,37 +111,3 @@ Notice the lack of a `2004-04-04 02:30:00`!
 
 
 **Status:** Withdrawn — as written, this would require extensive changes to the semantics of `datetime` to handle ambiguous times properly.
-
---
-
-# PEP 495: Local Time Disambiguation
-
-* First introduced in Python 3.6 to solve the ambiguous time problem
-* Introduces the `fold` attribute of `datetime`
-* Changes to aware datetime comparison around ambiguous times
-
-<br/>
-<br/>
-
-Whether you are on the fold side is a *property of the datetime*:
-
-<br/>
-
-```python
-print_tzinfo(datetime(2004, 10, 31, 1, 30, tzinfo=NYC))          # fold=0
-print_tzinfo(datetime(2004, 10, 31, 1, 30, fold=1, tzinfo=NYC))
-```
-
-<br/>
-
-<pre>
-2004-10-31 01:30:00-0400
-    tzname:   EDT;      UTC Offset:  -4.00h;        DST:      1.0h
-
-2004-10-31 01:30:00-0500
-    tzname:   EST;      UTC Offset:  -5.00h;        DST:      0.0h
-</pre>
-
-<br/>
-
-**N.B.:** `fold=1` represents the *second* instance of an ambiguous datetime.
