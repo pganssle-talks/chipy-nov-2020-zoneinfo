@@ -1,0 +1,17 @@
+_site
+docs/
+docs
+
+# Bundle stuff
+.vendor/
+.bundle/
+Makefile
+Gemfile
+Gemfile.lock
+
+# Python stuff
+__pycache__
+.mypy_cache
+.ipynb_checkpoints
+.pytest_cache
+.cache
