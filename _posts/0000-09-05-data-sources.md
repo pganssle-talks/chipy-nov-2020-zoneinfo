@@ -1,3 +1,24 @@
+# PEP 615: Support for the IANA Time Zone Database in the Standard Library
+
+<br/>
+
+- Introduced in Python 3.9
+- Adds the `zoneinfo` module
+- Introduces the `tzdata` first-party PyPI package
+
+<br/>
+
+<div style="text-align:center">
+<img 
+    src="images/zoneinfo-documentation.png"
+    alt="A screenshot of Python 3.9's zoneinfo documentation."/>
+</div>
+
+<br/>
+
+
+--
+
 # `zoneinfo` data source: IANA Time Zones
 
 - Provides historical time zone information
@@ -27,7 +48,7 @@
 # Solution <!-- .element: class="fragment" data-fragment-index="1" -->
 
 <ol class="fragment" data-fragment-index="1">
-<li><tt>zoneinfo.TZPATH</tt>: Time zone search path
+<li><strong><tt>zoneinfo.TZPATH</tt></strong>: Time zone search path
     <ul>
         <li>Defaults to well-known deployment locations</li>
         <li>Configurable in-program using <tt>zoneinfo.reset_tzpath()</tt></li>
@@ -37,7 +58,7 @@
     <br/>
 </li>
 
-<li><tt>tzdata</tt>: First party data-only fallback library
+<li><strong><tt>tzdata</tt></strong>: First party data-only fallback library
     <ul>
      <li>Not bundled with Python by default yet</li>
      <li>Required on Windows</li>
