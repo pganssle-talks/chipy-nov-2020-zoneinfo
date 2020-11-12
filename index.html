@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>zoneinfo: A stunning module of exceptional quality</title>
+		<title>Title here</title>
 
 		
 		
@@ -68,7 +68,9 @@ Paul Ganssle
 
 Notes:
 
-This is where speaker notes go.
+Hi everyone. My name is Paul Ganssle, I'm a software engineer at Google and a frequent contributor to open source projects. Particularly relevant to this talk, I am the maintainer of the `dateutil` project, and a core developer of the Python language.
+
+Today I'm going to talk to you a little bit about the history of time zone handling in Python, culminating in the creation of the `zoneinfo` module, a well-designed product that is clearly the work of an unparalleled genius. Plus, I'll also go into some details as to why I designed it the way I did.
 
 					</textarea>
 				</section>
@@ -85,16 +87,30 @@ This is where speaker notes go.
 ## Time zones vs. Offsets <!-- .element: class="fragment" data-fragment-index="1" -->
 
 <ul class="fragment" data-fragment-index="1">
-    <li><tt>UTC+1</tt> is an offset</li>
-    <li><tt>Europe/London</tt> is a time zone</tt></li>
-    <li><tt>BST</tt> is a highly context-dependent abbreviation:
+    <li><tt>UTC-6</tt> is an offset</li>
+    <li><tt>America/Chicago</tt> is a time zone</tt></li>
+    <li><tt>CST</tt> is a highly context-dependent abbreviation:
         <ul>
-            <li>British Summer Time (<tt>UTC+1</tt>)</li>
-            <li>Bangladesh Standard Time (<tt>UTC+6</tt>)</li>
-            <li>Bougainville Standard Time (<tt>UTC+11</tt>)</li>
+            <li>Chicago Standard Time (<tt>UTC-6</tt>)</li>
+            <li>Cuba Standard Time (<tt>UTC-5</tt>)</li>
+            <li>China Standard Time (<tt>UTC+8</tt>)</li>
         </ul>
     </li>
 <ul>
+
+Notes:
+
+Before we start in on the history of time zones in Python, it's probably a good idea to give you a little tour of the problem we're trying to solve.
+
+We can start out easy, with UTC. UTC is the reference time zone, it's the 0 against which offsets are measured. It is mostly monotonic — which is to say that it doesn't have daylight saving time. It still has leap seconds, which is infuriating, since leap seconds don't belong in civil time *at all*, much less in the reference time zone, but I think the damage is done there.
+
+Another concept that is important to know is the difference between time zones and offsets.
+
+UTC-6 is an offset. It means that you should add 6 hours to the local time to get a time in UTC.
+
+`America/Chicago` is a time zone - it's a set of rules for what offsets and abbreviations apply in a given region as a function of time.
+
+`CST`, which is the abbreviation for the offset that applies in Chicago right now, is a highly context-dependent abbreviation referring to an offset. In our context, it means Central Standard Time, but if you're in Cuba, it refers to Cuba Standard Time, and if you're in China, it refers to China standard time. Word of advice: never rely on these 3-letter abbreviations. Don't rely on them meaning a specific thing, and don't even rely on every zone having an associated 3-letter abbreviation.
 
 					</textarea>
 				</section>
@@ -109,6 +125,8 @@ This is where speaker notes go.
 - `Asia/Kathmandu` (+05:45)
 - `Africa/Monrovia` (+00:44:30) (Before 1979)
 
+<br/><br/>
+
 ## Change of DST status without offset change <!-- .element: class="fragment" data-fragment-index="1" -->
 
 <ul class="fragment" data-fragment-index="1">
@@ -116,31 +134,36 @@ This is where speaker notes go.
     Portugal, 1992
     <ul>
         <li><tt>WET (+0 STD) → WEST (+1 DST) 1992-03-29</tt></li>
-        <li><tt>WEST (+1 DST) → CET (+1 STD) 1992-09-27</tt></li>
+        <li><tt>WEST (+1 DST) → CET (+1 STD) 1992-09-27</tt><br/></li>
     </ul>
     </li>
     <li>
     Portugal, 1996
     <ul>
-        <li><tt>WET  (+0 STD) -> WEST (+1 DST)  1992-03-29</tt></li>
-        <li><tt>WEST (+1 DST) -> CET  (+1 STD)  1992-09-27</tt></li>
+        <li><tt>CET  (+1 STD) -> WEST (+1 DST)  1996-03-31</tt></li>
+        <li><tt>WEST (+1 DST) -> WET  (+0 STD)  1996-10-27</tt></li>
     </ul>
 </ul>
+
+
+Notes:
+
+Now that we've got the basics down, let's move into the mandatory part of any time zone talk where the presenter tells you about all the weird and scandalous stuff people get up to with their local timekeeping.
+
+You may have a friend — it's OK, I know you are asking for a friend — who thinks that there are only 24 time zones, and that they are all 1-hour increments away from UTC, but if you go to Australia or India, you'll find time zones that are at half-hour offsets, and if you go to Nepal, you'll find they even have one with a 15-minute offset. And if you look at historical data, like in Liberia before 1979, there are offsets that aren't even a whole number of *minutes* away from UTC.
+
+Your friend may also think that the only time that the only time UTC offsets will change is during a daylight saving time change and vice versa — that the offset always changes when DST status changes, but in Portugal in 1992, they decided they didn't want to be on Western European Time anymore, but they wanted to join the UTC+1 time zone, Central European Time, ...
 
 --
 
 # Complicated time zones
+<br/>
+<br/>
 
-## Zone name change without offset change
+## More than one DST transition per year
+<br/>
 
-* Aleutian Islands, 1983:
-  * `BST (-11 STD)` -> `BDT (-10 DST)`, `1983-04-24`
-  * `BDT (-10 DST)` -> `AHST (-10 STD)`, `1983-10-30`
-  * `AHST (-10 STD)` -> `HST (-10 STD)`, `1983-11-30` (Zone renamed)
-
-## More than one DST transition per year  <!-- .element: class="fragment" data-fragment-index="1" -->
-
-<ul class="fragment" data-fragment-index="1">
+<ul>
     <li>
     Morroco, 2012
     <ul>
@@ -151,12 +174,16 @@ This is where speaker notes go.
     </ul>
     </li>
 </ul>
+<br/>
+<br/>
 
-<span class="fragment" data-fragment-index="1">... and Morocco in 2013-present, and Egypt in 2010 and 2014, and Palestine in 2011.</span>
+<span >... and Morocco in 2013-present, and Egypt in 2010 and 2014, and Palestine in 2011.</span>
 
 --
 
 # Complicated time zones
+
+<br/>
 
 ## Missing days
 
@@ -164,18 +191,18 @@ This is where speaker notes go.
 
 
 ```python
-dt_before = datetime(1994, 12, 30, 23, 59, tzinfo=ZoneInfo('Pacific/Kiritimati'))
-dt_after = add_absolute(dt_before, timedelta(minutes=2))
+>>> dt_before = datetime(1994, 12, 30, 23, 59, tzinfo=ZoneInfo('Pacific/Kiritimati'))
+>>> dt_after = add_absolute(dt_before, timedelta(minutes=2))
 
-print(dt_before)
-print(dt_after)
+>>> print(dt_before)
+1994-12-30 23:59:00-10:00
+
+>>> print(dt_after)
+1995-01-01 00:01:00+14:00
 ```
 
 <br/>
-<pre>
-1994-12-30 23:59:00-10:00
-1995-01-01 00:01:00+14:00
-</pre>
+<br/>
 
 
 Also Samoa on January 29, 2011.
@@ -184,23 +211,29 @@ Also Samoa on January 29, 2011.
 
 # Complicated time zones
 
+<br/>
+
 ## Double days
+
+<br/>
+
 * Kwajalein Atoll, 1969
 
 
 ```python
-dt_before = datetime(1969, 9, 30, 11, 59, tzinfo=tz.gettz('Pacific/Kwajalein'))
-dt_after = add_absolute(dt_before, timedelta(minutes=2))
+>>> dt_before = datetime(1969, 9, 30, 11, 59, tzinfo=tz.gettz('Pacific/Kwajalein'))
+>>> dt_after = add_absolute(dt_before, timedelta(minutes=2))
 
-print(dt_before)
-print(dt_after)
+>>> print(dt_before)
+1969-09-30 11:59:00+11:00
+
+>>> print(dt_after)
+1969-09-30 12:01:00+11:00
 ```
+
+<br/>
 <br/>
 
-<pre>
-1969-09-30 11:59:00+11:00
-1969-09-30 12:01:00+11:00
-</pre>
 
 --
 
@@ -416,10 +449,10 @@ Notice the lack of a `2004-04-04 02:30:00`!
 
 ```python
 >>> print(repr(LOS_p))
-<DstTzInfo 'America/Los_Angeles' LMT-1 day, 16:07:00 STD>
+&amp;lt;DstTzInfo 'America/Los_Angeles' LMT-1 day, 16:07:00 STD>
 
 >>> print(repr(dt.tzinfo))
-<DstTzInfo 'America/Los_Angeles' EDT-1 day, 20:00:00 DST>
+&amp;lt;DstTzInfo 'America/Los_Angeles' EDT-1 day, 20:00:00 DST>
 ```
 
 * Python's model is designed to be lazy, but `pytz`'s model is *eager*
@@ -552,6 +585,27 @@ Whether you are on the fold side is a *property of the datetime*:
 				
 				<section data-markdown data-separator="^\n---\n$" data-separator-vertical="^\n--\n$" data-notes="^Note:">
 					<textarea data-template>
+# PEP 615: Support for the IANA Time Zone Database in the Standard Library
+
+<br/>
+
+- Introduced in Python 3.9
+- Adds the `zoneinfo` module
+- Introduces the `tzdata` first-party PyPI package
+
+<br/>
+
+<div style="text-align:center">
+<img 
+    src="images/zoneinfo-documentation.png"
+    alt="A screenshot of Python 3.9's zoneinfo documentation."/>
+</div>
+
+<br/>
+
+
+--
+
 # `zoneinfo` data source: IANA Time Zones
 
 - Provides historical time zone information
@@ -581,7 +635,7 @@ Whether you are on the fold side is a *property of the datetime*:
 # Solution <!-- .element: class="fragment" data-fragment-index="1" -->
 
 <ol class="fragment" data-fragment-index="1">
-<li><tt>zoneinfo.TZPATH</tt>: Time zone search path
+<li><strong><tt>zoneinfo.TZPATH</tt></strong>: Time zone search path
     <ul>
         <li>Defaults to well-known deployment locations</li>
         <li>Configurable in-program using <tt>zoneinfo.reset_tzpath()</tt></li>
@@ -591,7 +645,7 @@ Whether you are on the fold side is a *property of the datetime*:
     <br/>
 </li>
 
-<li><tt>tzdata</tt>: First party data-only fallback library
+<li><strong><tt>tzdata</tt></strong>: First party data-only fallback library
     <ul>
      <li>Not bundled with Python by default yet</li>
      <li>Required on Windows</li>
@@ -599,6 +653,10 @@ Whether you are on the fold side is a *property of the datetime*:
      </ul>
 </li>
 </ol>
+
+Notes:
+
+**Switch to camera 2**
 
 					</textarea>
 				</section>
@@ -996,14 +1054,18 @@ Because of the C backend, `zoneinfo` is faster than `pytz` and `dateutil` on eve
 
 <div style="text-align:center">
 <img src="images/pytz_deprecation.png"
-     alt="Text from the PEP 615 discussion from stub42, maintainer of pytz:
-
-          Hi. First, thanks for working on this. I’ve managed to put off similar work for about a decade now. I look forward being able to deprecate pytz, making it a thin wrapper around the standard library when run with a supported Python. This kind of needs to happen before 2038, as pytz dates from before the newest tzfile format and does not handle the later timestamps."/>
+     alt="Text from the PEP 615 discussion from stub42, maintainer of pytz: <!--
+--><!--
+-->       Hi. First, thanks for working on this. I’ve managed to put off similar work for about a decade now. I look forward being able to deprecate pytz, making it a thin wrapper around the standard library when run with a supported Python. This kind of needs to happen before 2038, as pytz dates from before the newest tzfile format and does not handle the later timestamps."/>
 </div>
 
 - `zoneinfo` is an improved implementation of `dateutil`'s IANA time zones, and `dateutil` will be updated to be a drop-in replacement.
 
 - Both `dateutil` and `pytz` currently suffer from a year 2038 bug, which has been exacerbated by some changes to the default compilation mode of the time zone database.
+
+Notes:
+
+**Switch to Camera 1**
 
 					</textarea>
 				</section>
@@ -1128,24 +1190,67 @@ Other than the deprecation warning, this will be a silent behavior change!
 				
 				<section data-markdown data-separator="^\n---\n$" data-separator-vertical="^\n--\n$" data-notes="^Note:">
 					<textarea data-template>
+# What's next?
+<br/>
+
+- Ambiguous and imaginary time detection?
+    - Currently available via `dateutil.tz`:
+        - `tz.datetime_ambiguous`
+        - `tz.datetime_exists`
+        - `tz.resolve_imaginary`
+  <br/><br/>
+
+- Improvements to `datetime` arithmetic
+
+    - Separate built-in functions for absolute and wall time
+    - Possible minor changes to the semantics of datetime subtraction
+  <br/><br/>
+
+- Leap second support
+
+    - Needs changes to the `datetime` class
+    - Leap second data is included in `tzdata` and IANA database
+    - Looking for real use cases
+  <br/><br/>
+
+--
+
 # What you can do
 
+<br/>
+
 - Be an early adopter!
-  <br/>
+    <br/><br/>
 
 - Help add support for `zoneinfo` zones in popular libraries
 
     - `pytz-deprecation-shim` may work with Django, but `zoneinfo` won't out of the box (yet)
     - `pandas` makes extensive use of the private API for `pytz` and `dateutil`, and will not work with `zoneinfo` (as of 1.1.4)
 
-      <br/>
+    <br/><br/>
 - Start updating documentation and StackOverflow questions to recommend `zoneinfo`
+    <br/><br/>
+- Bring me your real-world leap second use cases!
 
 					</textarea>
 				</section>
 				
 
 			</div>
+
+<div class="sbcontainer">
+    <img src="images/pganssle-logos-rotated.svg"
+         style="width: 1.1em;"
+         class="sbitem" />
+    <img src="images/ganssleio_rotated.svg"
+         style="width: 1.1em;"
+         class="sbitem" />
+    <img src="external-images/logos/zero-black.svg"
+         style="width: 1.8em;
+                margin-bottom: 0.5em;"
+        class="sbitem">
+</div>
+
 
 		</div>
 

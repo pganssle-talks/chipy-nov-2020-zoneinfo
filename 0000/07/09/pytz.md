@@ -16,10 +16,10 @@
 
 ```python
 >>> print(repr(LOS_p))
-<DstTzInfo 'America/Los_Angeles' LMT-1 day, 16:07:00 STD>
+&amp;lt;DstTzInfo 'America/Los_Angeles' LMT-1 day, 16:07:00 STD>
 
 >>> print(repr(dt.tzinfo))
-<DstTzInfo 'America/Los_Angeles' EDT-1 day, 20:00:00 DST>
+&amp;lt;DstTzInfo 'America/Los_Angeles' EDT-1 day, 20:00:00 DST>
 ```
 
 * Python's model is designed to be lazy, but `pytz`'s model is *eager*
