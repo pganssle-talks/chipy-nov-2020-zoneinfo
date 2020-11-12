@@ -34,9 +34,9 @@ Because of the C backend, `zoneinfo` is faster than `pytz` and `dateutil` on eve
 
 <div style="text-align:center">
 <img src="images/pytz_deprecation.png"
-     alt="Text from the PEP 615 discussion from stub42, maintainer of pytz:
-
-          Hi. First, thanks for working on this. I’ve managed to put off similar work for about a decade now. I look forward being able to deprecate pytz, making it a thin wrapper around the standard library when run with a supported Python. This kind of needs to happen before 2038, as pytz dates from before the newest tzfile format and does not handle the later timestamps."/>
+     alt="Text from the PEP 615 discussion from stub42, maintainer of pytz: <!--
+--><!--
+-->       Hi. First, thanks for working on this. I’ve managed to put off similar work for about a decade now. I look forward being able to deprecate pytz, making it a thin wrapper around the standard library when run with a supported Python. This kind of needs to happen before 2038, as pytz dates from before the newest tzfile format and does not handle the later timestamps."/>
 </div>
 
 - `zoneinfo` is an improved implementation of `dateutil`'s IANA time zones, and `dateutil` will be updated to be a drop-in replacement.
