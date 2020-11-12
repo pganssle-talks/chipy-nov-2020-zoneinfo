@@ -66,3 +66,7 @@
      </ul>
 </li>
 </ol>
+
+Notes:
+
+**Switch to camera 2**

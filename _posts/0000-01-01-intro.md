@@ -22,5 +22,6 @@ Paul Ganssle
 
 Notes:
 
-This is where speaker notes go.
+Hi everyone. My name is Paul Ganssle, I'm a software engineer at Google and a frequent contributor to open source projects. Particularly relevant to this talk, I am the maintainer of the `dateutil` project, and a core developer of the Python language.
 
+Today I'm going to talk to you a little bit about the history of time zone handling in Python, culminating in the creation of the `zoneinfo` module, a well-designed product that is clearly the work of an unparalleled genius. Plus, I'll also go into some details as to why I designed it the way I did.

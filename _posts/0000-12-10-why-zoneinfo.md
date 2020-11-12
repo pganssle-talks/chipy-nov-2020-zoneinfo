@@ -42,3 +42,7 @@ Because of the C backend, `zoneinfo` is faster than `pytz` and `dateutil` on eve
 - `zoneinfo` is an improved implementation of `dateutil`'s IANA time zones, and `dateutil` will be updated to be a drop-in replacement.
 
 - Both `dateutil` and `pytz` currently suffer from a year 2038 bug, which has been exacerbated by some changes to the default compilation mode of the time zone database.
+
+Notes:
+
+**Switch to Camera 1**
